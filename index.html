@@ -49,6 +49,7 @@
             margin-bottom: 30px;
             font-weight: 700;
             letter-spacing: 1px;
+            font-size: 2.2rem;
         }
         .filters {
             margin-bottom: 25px;
@@ -57,18 +58,20 @@
             gap: 20px;
             justify-content: center;
             padding: 15px;
-            background-color: var(--secondary-color); /* Mantido suave para não sobrecarregar */
+            background-color: var(--secondary-color);
             border-radius: 12px;
         }
         .filter-item {
             display: flex;
             flex-direction: column;
+            min-width: 200px;
         }
         .filter-item label {
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--primary-color); /* Azul marinho para os rótulos */
+            color: var(--primary-color);
             font-size: 14px;
+            text-align: center;
         }
         .filter-item select, .filter-item input {
             padding: 10px;
@@ -78,14 +81,17 @@
             font-size: 14px;
             background-color: white;
             transition: all 0.3s ease;
+            text-align: center;
         }
         .filter-item select:focus, .filter-item input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.2); /* Sombra azul-marinho suave */
+            box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.2);
         }
         .table-wrapper {
             overflow-x: auto;
+            margin: 0 auto;
+            width: 100%;
         }
         table {
             width: 100%;
@@ -94,6 +100,7 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin: 0 auto;
         }
         th, td {
             padding: 18px;
@@ -102,11 +109,12 @@
             background: var(--bg-card-color);
         }
         th {
-            background: var(--primary-color); /* Azul Marinho no cabeçalho */
-            color: var(--gold-accent); /* Texto dourado no cabeçalho */
+            background: var(--primary-color);
+            color: var(--gold-accent);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            text-align: center;
         }
         tr:last-child td {
             border-bottom: none;
@@ -179,7 +187,7 @@
         .auth-form button {
             width: 100%;
             padding: 12px;
-            background-color: var(--primary-color); /* Azul Marinho */
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
@@ -189,7 +197,7 @@
             transition: background-color 0.3s ease;
         }
         .auth-form button:hover {
-            background-color: #003366; /* Azul Marinho mais escuro no hover */
+            background-color: #003366;
         }
         .error-message {
             color: var(--status-vendido);
@@ -223,12 +231,13 @@
         }
         .status-cell {
             position: relative;
+            text-align: center;
         }
         .finish-editing {
             display: none;
             margin: 25px auto;
             padding: 12px 24px;
-            background: var(--primary-color); /* Azul Marinho */
+            background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
@@ -237,15 +246,15 @@
             transition: background 0.3s ease;
         }
         .finish-editing:hover {
-            background: #003366; /* Azul Marinho mais escuro no hover */
+            background: #003366;
         }
         .edit-mode::before {
             content: "🔓 Modo de Edição Ativo";
             display: block;
             text-align: center;
             padding: 12px;
-            background-color: var(--primary-color); /* Azul Marinho para a barra de edição */
-            color: var(--gold-accent); /* Texto dourado na barra de edição */
+            background-color: var(--primary-color);
+            color: var(--gold-accent);
             font-weight: 600;
             border-radius: 12px 12px 0 0;
             margin: -30px -30px 20px -30px;
@@ -258,6 +267,11 @@
         @media (max-width: 768px) {
             .filters {
                 flex-direction: column;
+                align-items: center;
+            }
+            .filter-item {
+                width: 100%;
+                max-width: 300px;
             }
             .container {
                 padding: 20px;
@@ -267,7 +281,6 @@
 </head>
 <body>
     <div class="container">
-
         <h1>Tabela Exclusiva ESSENCE</h1>
         
         <div class="filters">
@@ -310,7 +323,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    </tbody>
+                    <!-- Os dados serão inseridos aqui pelo JavaScript -->
+                </tbody>
             </table>
         </div>
         
@@ -561,4 +575,5 @@
     </script>
 </body>
 </html>
+
 
