@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frações Essence - Tabela Interativa</title>
+    <title>Tabela Exclusiva ESSENCE</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #4a90e2;
-            --secondary-color: #f0f4f8;
-            --text-color: #333;
-            --heading-color: #1e3a8a;
-            --bg-body-color: #f9fafb;
-            --bg-card-color: #fff;
-            --border-color: #e2e8f0;
-            --status-disponivel: #34d399; /* verde */
-            --status-reservado: #f59e0b; /* amarelo */
-            --status-vendido: #ef4444; /* vermelho */
+            --primary-color: #001F3F; /* Azul Marinho */
+            --secondary-color: #F8F9FA; /* Cinzento muito suave para fundos */
+            --text-color: #333; /* Texto geral */
+            --heading-color: #001F3F; /* Azul Marinho para títulos */
+            --bg-body-color: #f9fafb; /* Fundo da página */
+            --bg-card-color: #fff; /* Fundo de cartões/tabela */
+            --border-color: #e2e8f0; /* Cor de bordas */
+
+            /* Cores para os status ajustadas à nova paleta */
+            --status-disponivel: #28a745; /* Verde para Disponível */
+            --status-reservado: #ffc107; /* Amarelo/Laranja para Reservado */
+            --status-vendido: #dc3545; /* Vermelho para Vendido */
+
+            --gold-accent: #FFD700; /* Dourado para detalhes */
         }
         body {
             font-family: 'Poppins', sans-serif;
@@ -53,7 +57,7 @@
             gap: 20px;
             justify-content: center;
             padding: 15px;
-            background-color: var(--secondary-color);
+            background-color: var(--secondary-color); /* Mantido suave para não sobrecarregar */
             border-radius: 12px;
         }
         .filter-item {
@@ -63,7 +67,7 @@
         .filter-item label {
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--heading-color);
+            color: var(--primary-color); /* Azul marinho para os rótulos */
             font-size: 14px;
         }
         .filter-item select, .filter-item input {
@@ -78,7 +82,7 @@
         .filter-item select:focus, .filter-item input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 31, 63, 0.2); /* Sombra azul-marinho suave */
         }
         .table-wrapper {
             overflow-x: auto;
@@ -98,8 +102,8 @@
             background: var(--bg-card-color);
         }
         th {
-            background: var(--primary-color);
-            color: white;
+            background: var(--primary-color); /* Azul Marinho no cabeçalho */
+            color: var(--gold-accent); /* Texto dourado no cabeçalho */
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -175,7 +179,7 @@
         .auth-form button {
             width: 100%;
             padding: 12px;
-            background-color: var(--primary-color);
+            background-color: var(--primary-color); /* Azul Marinho */
             color: white;
             border: none;
             border-radius: 8px;
@@ -185,7 +189,7 @@
             transition: background-color 0.3s ease;
         }
         .auth-form button:hover {
-            background-color: #3a7bd5;
+            background-color: #003366; /* Azul Marinho mais escuro no hover */
         }
         .error-message {
             color: var(--status-vendido);
@@ -224,7 +228,7 @@
             display: none;
             margin: 25px auto;
             padding: 12px 24px;
-            background: var(--heading-color);
+            background: var(--primary-color); /* Azul Marinho */
             color: white;
             border: none;
             border-radius: 8px;
@@ -233,15 +237,15 @@
             transition: background 0.3s ease;
         }
         .finish-editing:hover {
-            background: var(--primary-color);
+            background: #003366; /* Azul Marinho mais escuro no hover */
         }
         .edit-mode::before {
             content: "🔓 Modo de Edição Ativo";
             display: block;
             text-align: center;
             padding: 12px;
-            background-color: var(--status-disponivel);
-            color: white;
+            background-color: var(--primary-color); /* Azul Marinho para a barra de edição */
+            color: var(--gold-accent); /* Texto dourado na barra de edição */
             font-weight: 600;
             border-radius: 12px 12px 0 0;
             margin: -30px -30px 20px -30px;
@@ -263,7 +267,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Frações Essence - Tabela Interativa</h1>
+
+        <h1>Tabela Exclusiva ESSENCE</h1>
         
         <div class="filters">
             <div class="filter-item">
@@ -556,3 +561,4 @@
     </script>
 </body>
 </html>
+
