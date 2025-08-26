@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frações Essence - Tabela Interativa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f0f4f8;
+            --text-color: #333;
+            --heading-color: #1e3a8a;
+            --bg-body-color: #f9fafb;
+            --bg-card-color: #fff;
+            --border-color: #e2e8f0;
+            --status-disponivel: #34d399; /* verde */
+            --status-reservado: #f59e0b; /* amarelo */
+            --status-vendido: #ef4444; /* vermelho */
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: var(--bg-body-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            background: var(--bg-card-color);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        h1 {
+            color: var(--heading-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .filters {
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 15px;
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+        }
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .filter-item label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--heading-color);
+            font-size: 14px;
+        }
+        .filter-item select, .filter-item input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-family: inherit;
+            font-size: 14px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        .filter-item select:focus, .filter-item input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-card-color);
+        }
+        th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background: var(--secondary-color);
+        }
+        .disponivel, .reservado, .vendido {
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            border-radius: 6px;
+            padding: 8px 12px;
+            display: inline-block;
+            border: 1px solid;
+            text-align: center;
+        }
+        .disponivel { color: var(--status-disponivel); border-color: var(--status-disponivel); }
+        .reservado { color: var(--status-reservado); border-color: var(--status-reservado); }
+        .vendido { color: var(--status-vendido); border-color: var(--status-vendido); }
+        .disponivel:hover, .reservado:hover, .vendido:hover {
+            transform: scale(1.05);
+        }
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .summary h3 {
+            margin-top: 0;
+            color: var(--heading-color);
+        }
+        .auth-modal {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000;
+        }
+        .auth-form {
+            background-color: var(--bg-card-color);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            width: 350px;
+            text-align: center;
+        }
+        .auth-form h2 {
+            margin-top: 0;
+            color: var(--heading-color);
+            font-weight: 600;
+        }
+        .auth-form input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .auth-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .auth-form button:hover {
+            background-color: #3a7bd5;
+        }
+        .error-message {
+            color: var(--status-vendido);
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .status-options {
+            display: none;
+            position: absolute;
+            background-color: var(--bg-card-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 100;
+            width: 150px;
+            overflow: hidden;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 5px;
+        }
+        .status-option {
+            padding: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .status-option:hover {
+            background-color: var(--secondary-color);
+        }
+        .status-cell {
+            position: relative;
+        }
+        .finish-editing {
+            display: none;
+            margin: 25px auto;
+            padding: 12px 24px;
+            background: var(--heading-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .finish-editing:hover {
+            background: var(--primary-color);
+        }
+        .edit-mode::before {
+            content: "🔓 Modo de Edição Ativo";
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background-color: var(--status-disponivel);
+            color: white;
+            font-weight: 600;
+            border-radius: 12px 12px 0 0;
+            margin: -30px -30px 20px -30px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Frações Essence - Tabela Interativa</h1>
+        
+        <div class="filters">
+            <div class="filter-item">
+                <label for="filter-tipologia">Filtrar por Tipologia:</label>
+                <select id="filter-tipologia">
+                    <option value="all">Todas</option>
+                    <option value="T1">T1</option>
+                    <option value="T2">T2</option>
+                    <option value="T3">T3</option>
+                    <option value="T4">T4</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filter-status">Filtrar por Status:</label>
+                <select id="filter-status">
+                    <option value="all">Todos</option>
+                    <option value="Disponível">Disponível</option>
+                    <option value="Reservado">Reservado</option>
+                    <option value="Vendido">Vendido</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="search">Pesquisar fração:</label>
+                <input type="text" id="search" placeholder="Digite o código...">
+            </div>
+        </div>
+        
+        <div class="table-wrapper">
+            <table id="fracoes-table">
+                <thead>
+                    <tr>
+                        <th>Frações Associadas</th>
+                        <th>Tipologia</th>
+                        <th>Área Interior</th>
+                        <th>Estacionamento</th>
+                        <th>Eficiência Energética</th>
+                        <th>Preço</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+        
+        <button id="finish-editing" class="finish-editing">Terminar Edição</button>
+        
+        <div class="summary">
+            <h3>Resumo:</h3>
+            <p id="summary-text">Carregando...</p>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="auth-modal">
+        <div class="auth-form">
+            <h2>Autenticação Necessária</h2>
+            <p>Para alterar o status, digite a senha:</p>
+            <input type="password" id="password-input" placeholder="Digite a senha">
+            <button id="auth-btn">Confirmar</button>
+            <p id="error-message" class="error-message"></p>
+        </div>
+    </div>
+
+    <script>
+        // Dados das frações
+        const fracoes = [
+            { fracao: "126401125-88", tipologia: "T1", area: "74 m²", estacionamento: "1", eficiencia: "A", preco: "327000 €", status: "Disponível" },
+            { fracao: "126401125-97", tipologia: "T1", area: "70 m²", estacionamento: "1", eficiencia: "A", preco: "340000 €", status: "Disponível" },
+            { fracao: "126401125-96", tipologia: "T1", area: "75 m²", estacionamento: "1", eficiencia: "A", preco: "355000 €", status: "Disponível" },
+            { fracao: "126401125-82", tipologia: "T2", area: "85 m²", estacionamento: "1", eficiencia: "A", preco: "386000 €", status: "Disponível" },
+            { fracao: "126401125-87", tipologia: "T2", area: "97 m²", estacionamento: "1", eficiencia: "A", preco: "395000 €", status: "Disponível" },
+            { fracao: "126401125-68", tipologia: "T2", area: "107 m²", estacionamento: "1", eficiencia: "A", preco: "435000 €", status: "Disponível" },
+            { fracao: "126401125-94", tipologia: "T2", area: "109 m²", estacionamento: "1", eficiencia: "A", preco: "445000 €", status: "Disponível" },
+            { fracao: "126401125-73", tipologia: "T3", area: "106 m²", estacionamento: "1", eficiencia: "A", preco: "470000 €", status: "Disponível" },
+            { fracao: "126401125-78", tipologia: "T3", area: "118 m²", estacionamento: "2", eficiencia: "A", preco: "482000 €", status: "Disponível" },
+            { fracao: "126401125-75", tipologia: "T3", area: "121 m²", estacionamento: "2", eficiencia: "A", preco: "497000 €", status: "Disponível" },
+            { fracao: "126401125-70", tipologia: "T3", area: "123 m²", estacionamento: "1", eficiencia: "A", preco: "505000 €", status: "Disponível" },
+            { fracao: "126401125-95", tipologia: "T2", area: "120 m²", estacionamento: "1", eficiencia: "A", preco: "521000 €", status: "Disponível" },
+            { fracao: "126401125-74", tipologia: "T3", area: "121 m²", estacionamento: "2", eficiencia: "A", preco: "526000 €", status: "Disponível" },
+            { fracao: "126401125-99", tipologia: "T3", area: "132 m²", estacionamento: "1", eficiencia: "A", preco: "554000 €", status: "Disponível" },
+            { fracao: "126401125-69", tipologia: "T3", area: "132 m²", estacionamento: "1", eficiencia: "A", preco: "554000 €", status: "Disponível" },
+            { fracao: "126401125-98", tipologia: "T3", area: "122 m²", estacionamento: "2", eficiencia: "A", preco: "558000 €", status: "Disponível" },
+            { fracao: "126401125-91", tipologia: "T3", area: "134 m²", estacionamento: "2", eficiencia: "A", preco: "570000 €", status: "Disponível" },
+            { fracao: "126401125-90", tipologia: "T3", area: "134 m²", estacionamento: "3", eficiencia: "A", preco: "577000 €", status: "Disponível" },
+            { fracao: "126401125-83", tipologia: "T3", area: "139 m²", estacionamento: "2", eficiencia: "A", preco: "582000 €", status: "Disponível" },
+            { fracao: "126401125-89", tipologia: "T3", area: "138 m²", estacionamento: "3", eficiencia: "A", preco: "591000 €", status: "Disponível" },
+            { fracao: "126401125-86", tipologia: "T3", area: "151 m²", estacionamento: "2", eficiencia: "A", preco: "656000 €", status: "Disponível" },
+            { fracao: "126401125-92", tipologia: "T3", area: "148 m²", estacionamento: "3", eficiencia: "A", preco: "667000 €", status: "Disponível" },
+            { fracao: "126401125-93", tipologia: "T3", area: "148 m²", estacionamento: "3", eficiencia: "A", preco: "667000 €", status: "Disponível" },
+            { fracao: "126401125-71", tipologia: "T4", area: "194 m²", estacionamento: "2", eficiencia: "A", preco: "830000 €", status: "Disponível" },
+            { fracao: "126401125-72", tipologia: "T4", area: "194 m²", estacionamento: "2", eficiencia: "A", preco: "830000 €", status: "Disponível" },
+            { fracao: "126401125-76", tipologia: "T4", area: "194 m²", estacionamento: "2", eficiencia: "A", preco: "835000 €", status: "Disponível" },
+            { fracao: "126401125-77", tipologia: "T4", area: "194 m²", estacionamento: "2", eficiencia: "A", preco: "835000 €", status: "Disponível" },
+            { fracao: "126401125-80", tipologia: "T4", area: "198 m²", estacionamento: "2", eficiencia: "A", preco: "902000 €", status: "Disponível" },
+            { fracao: "126401125-81", tipologia: "T4", area: "198 m²", estacionamento: "2", eficiencia: "A", preco: "902000 €", status: "Disponível" },
+            { fracao: "126401125-79", tipologia: "T4", area: "200 m²", estacionamento: "2", eficiencia: "A", preco: "908000 €", status: "Disponível" }
+        ];
+
+        let isAuthenticated = false;
+        let statusOptionsMenu = null;
+        let currentFracao = null;
+
+        function renderTable(data) {
+            const tbody = document.querySelector('#fracoes-table tbody');
+            tbody.innerHTML = '';
+            
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${item.fracao}</td>
+                    <td>${item.tipologia}</td>
+                    <td>${item.area}</td>
+                    <td>${item.estacionamento}</td>
+                    <td>${item.eficiencia}</td>
+                    <td>${item.preco}</td>
+                    <td class="status-cell">
+                        <div class="${item.status.toLowerCase()}" data-fracao="${item.fracao}">
+                            ${item.status}
+                        </div>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            document.querySelectorAll('.status-cell > div').forEach(statusDiv => {
+                statusDiv.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const fracao = this.getAttribute('data-fracao');
+                    
+                    if (isAuthenticated) {
+                        showStatusOptions(fracao);
+                    } else {
+                        showAuthModal(fracao);
+                    }
+                });
+            });
+            
+            updateSummary();
+        }
+
+        function showAuthModal(fracao) {
+            currentFracao = fracao;
+            document.getElementById('auth-modal').style.display = 'flex';
+            document.getElementById('password-input').value = '';
+            document.getElementById('error-message').textContent = '';
+            document.getElementById('password-input').focus();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+            currentFracao = null;
+        }
+
+        function checkAuthentication() {
+            const password = document.getElementById('password-input').value;
+            const errorMessage = document.getElementById('error-message');
+            
+            if (password === 'Ricardo_Antunes') {
+                isAuthenticated = true;
+                closeAuthModal();
+                document.getElementById('finish-editing').style.display = 'block';
+                document.querySelector('.container').classList.add('edit-mode');
+                
+                if (currentFracao) {
+                    showStatusOptions(currentFracao);
+                }
+            } else {
+                errorMessage.textContent = 'Senha incorreta. Tente novamente.';
+            }
+        }
+
+        function showStatusOptions(fracao) {
+            if (statusOptionsMenu) {
+                statusOptionsMenu.remove();
+            }
+            
+            const statusDiv = document.querySelector(`.status-cell > div[data-fracao="${fracao}"]`);
+            const rect = statusDiv.getBoundingClientRect();
+            
+            statusOptionsMenu = document.createElement('div');
+            statusOptionsMenu.className = 'status-options';
+            statusOptionsMenu.innerHTML = `
+                <div class="status-option disponivel" data-status="Disponível">Disponível</div>
+                <div class="status-option reservado" data-status="Reservado">Reservado</div>
+                <div class="status-option vendido" data-status="Vendido">Vendido</div>
+            `;
+            document.body.appendChild(statusOptionsMenu);
+            
+            statusOptionsMenu.style.top = `${rect.bottom + window.scrollY}px`;
+            statusOptionsMenu.style.left = `${rect.left + window.scrollX}px`;
+            statusOptionsMenu.style.display = 'block';
+            
+            statusOptionsMenu.querySelectorAll('.status-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const newStatus = this.getAttribute('data-status');
+                    updateStatus(fracao, newStatus);
+                    statusOptionsMenu.style.display = 'none';
+                });
+            });
+            
+            const closeMenuHandler = function(e) {
+                if (!statusOptionsMenu.contains(e.target) && !statusDiv.contains(e.target)) {
+                    statusOptionsMenu.style.display = 'none';
+                    document.removeEventListener('click', closeMenuHandler);
+                }
+            };
+            
+            setTimeout(() => {
+                document.addEventListener('click', closeMenuHandler);
+            }, 0);
+        }
+
+        function updateStatus(fracao, newStatus) {
+            const item = fracoes.find(f => f.fracao === fracao);
+            if (item) {
+                item.status = newStatus;
+            }
+            
+            const statusDiv = document.querySelector(`.status-cell > div[data-fracao="${fracao}"]`);
+            statusDiv.className = newStatus.toLowerCase();
+            statusDiv.textContent = newStatus;
+            
+            updateSummary();
+        }
+
+        function finishEditing() {
+            isAuthenticated = false;
+            document.getElementById('finish-editing').style.display = 'none';
+            document.querySelector('.container').classList.remove('edit-mode');
+            
+            if (statusOptionsMenu) {
+                statusOptionsMenu.remove();
+                statusOptionsMenu = null;
+            }
+        }
+
+        function updateSummary() {
+            const total = fracoes.length;
+            const disponiveis = fracoes.filter(f => f.status === 'Disponível').length;
+            const reservados = fracoes.filter(f => f.status === 'Reservado').length;
+            const vendidos = fracoes.filter(f => f.status === 'Vendido').length;
+            
+            document.getElementById('summary-text').innerHTML = `
+                Total de frações: <strong>${total}</strong> | 
+                Disponíveis: <strong>${disponiveis}</strong> | 
+                Reservados: <strong>${reservados}</strong> | 
+                Vendidos: <strong>${vendidos}</strong>
+            `;
+        }
+
+        function filterTable() {
+            const tipologiaFilter = document.getElementById('filter-tipologia').value;
+            const statusFilter = document.getElementById('filter-status').value;
+            const searchText = document.getElementById('search').value.toLowerCase();
+            
+            const filteredData = fracoes.filter(item => {
+                return (tipologiaFilter === 'all' || item.tipologia === tipologiaFilter) &&
+                       (statusFilter === 'all' || item.status === statusFilter) &&
+                       (item.fracao.toLowerCase().includes(searchText));
+            });
+            
+            renderTable(filteredData);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable(fracoes);
+            
+            document.getElementById('filter-tipologia').addEventListener('change', filterTable);
+            document.getElementById('filter-status').addEventListener('change', filterTable);
+            document.getElementById('search').addEventListener('input', filterTable);
+            
+            document.getElementById('auth-btn').addEventListener('click', checkAuthentication);
+            
+            document.getElementById('password-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAuthentication();
+                }
+            });
+            
+            document.getElementById('finish-editing').addEventListener('click', finishEditing);
+            
+            document.getElementById('auth-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeAuthModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
